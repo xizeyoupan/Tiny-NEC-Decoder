@@ -68,26 +68,34 @@ void nec_scan_100us(uint8_t level)
                 int8_t bit_pos = nec_receiving_data.nec_receiving_bit_cnt & (8 - 1);
                 switch (nec_receiving_data.nec_receiving_bit_cnt >> 3)
                 {
+#if (NEC_USE_ADDRESS != 0)
                 case 0:
                     nec_receiving_command.nec_command.address |= (1 << bit_pos);
                     break;
+#endif
+#if (NEC_USE_INVERSE_ADDRESS != 0)
                 case 1:
                     nec_receiving_command.nec_command.address_r |= (1 << bit_pos);
                     break;
+#endif
                 case 2:
                     nec_receiving_command.nec_command.command |= (1 << bit_pos);
                     break;
+#if (NEC_USE_INVERSE_COMMAND != 0)
                 case 3:
                     nec_receiving_command.nec_command.command_r |= (1 << bit_pos);
                     break;
+#endif
                 default:
                     break;
                 }
 
+#if (NEC_USE_GET_DATA_CALLBACK != 0)
                 if (nec_receiving_data.nec_receiving_bit_cnt == 31)
                 {
                     nec_get_data_callback(&nec_receiving_command);
                 }
+#endif
                 if (nec_receiving_data.nec_receiving_bit_cnt != 31)
                 {
                     nec_receiving_data.nec_receiving_bit_cnt++;
@@ -98,10 +106,13 @@ void nec_scan_100us(uint8_t level)
         {
             if (nec_receiving_data.nec_receiving_repeat == 1)
             {
+#if (NEC_USE_REPEAT != 0)
                 nec_receiving_command.repeat++;
+#endif
                 nec_receiving_data.nec_receiving_repeat = 0;
-
+#if (NEC_USE_GET_DATA_REPEAT_CALLBACK != 0)
                 nec_get_data_repeat_callback(&nec_receiving_command);
+#endif
             }
         }
         else if (42 <= nec_receiving_data.nec_low_tick_cnt && nec_receiving_data.nec_low_tick_cnt <= 48)
@@ -117,10 +128,12 @@ void nec_scan_100us(uint8_t level)
 
     if (nec_receiving_data.nec_low_tick_cnt > 1200)
     {
+#if (NEC_USE_GET_DATA_FINISH_CALLBACK != 0)
         if (nec_receiving_data.nec_receiving_bit_cnt == 31)
         {
             nec_get_data_finish_callback(&nec_receiving_command);
         }
+#endif
         nec_receiving_data_reset();
     }
 }
