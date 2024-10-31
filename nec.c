@@ -90,10 +90,10 @@ void nec_scan_100us(uint8_t level)
                     break;
                 }
 
-#if (NEC_USE_GET_DATA_CALLBACK != 0)
+#if (NEC_USE_GET_DATA_FLAG != 0)
                 if (nec_receiving_data.nec_receiving_bit_cnt == 31)
                 {
-                    nec_get_data_callback(&nec_receiving_command);
+                    nec_receiving_data.nec_get_data_flag = 1;
                 }
 #endif
                 if (nec_receiving_data.nec_receiving_bit_cnt != 31)
@@ -110,8 +110,8 @@ void nec_scan_100us(uint8_t level)
                 nec_receiving_command.repeat++;
 #endif
                 nec_receiving_data.nec_receiving_repeat = 0;
-#if (NEC_USE_GET_DATA_REPEAT_CALLBACK != 0)
-                nec_get_data_repeat_callback(&nec_receiving_command);
+#if (NEC_USE_GET_DATA_REPEAT_FLAG != 0)
+                nec_receiving_data.nec_get_data_repeat_flag = 1;
 #endif
             }
         }
@@ -128,10 +128,10 @@ void nec_scan_100us(uint8_t level)
 
     if (nec_receiving_data.nec_low_tick_cnt > 1200)
     {
-#if (NEC_USE_GET_DATA_FINISH_CALLBACK != 0)
+#if (NEC_USE_GET_DATA_FINISH_FLAG != 0)
         if (nec_receiving_data.nec_receiving_bit_cnt == 31)
         {
-            nec_get_data_finish_callback(&nec_receiving_command);
+            nec_receiving_data.nec_get_data_finish_flag = 1;
         }
 #endif
         nec_receiving_data_reset();

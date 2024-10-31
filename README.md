@@ -4,7 +4,7 @@ The NEC IR transmission protocol uses pulse distance encoding of the message bit
 
 ## Requirements
 - A 100-μs timer for continuous scanning.
-- Less than 10 bytes of RAM and less than 100 bytes of ROM with minimal configuration.
+- Less than 20 bytes of RAM and less than 250 bytes of ROM with minimal configuration.
 
 ## Feature
 - Easy to use.
@@ -16,8 +16,7 @@ The NEC IR transmission protocol uses pulse distance encoding of the message bit
 1. Modify the <nec.h> file.
 2. Include the <nec.h> file.
 3. Call `void nec_scan_100us(uint8_t level)` every 100 microseconds.
-4. Implement the necessary callbacks according to the <nec.h> file.
-5. Once the data is ready, retrieve it through the callbacks.
+4. Once the data is ready, retrieve it through checking flags.
 
 ## Examples
 
@@ -39,28 +38,20 @@ void int_isr(void) __interrupt
     nec_scan_100us(gpio_get_level(GPIO_NUM));
 }
 
-nec_command_type received_command;
-int flag = 0;
+extern nec_command_type nec_receiving_command;
+extern nec_receiving_data_type nec_receiving_data;
 
-// callback
-void nec_get_data_finish_callback(nec_command_type *command)
-{
-    received_command = *command;
-    flag = 1;
-}
+uint8_t data;
 
 // mian loop
 void main(void)
 {
     while(1)
     {
-        if(flag)
+        if(nec_receiving_data.nec_get_data_flag)
         {
-            flag = 0;
-            /*
-             * You can do something here.
-             * process_command(&received_command);
-             */
+            nec_receiving_data.nec_get_data_flag = 0;
+            data = nec_receiving_command.nec_command.command;
         }
     }
 }
