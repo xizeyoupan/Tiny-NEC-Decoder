@@ -56,11 +56,11 @@ typedef struct
 
 typedef struct
 {
-    uint16_t nec_low_tick_cnt : 11;
-    uint16_t nec_high_tick_cnt : 11;
-    uint8_t nec_receiving_bit_cnt : 5;
-    uint8_t nec_receiving_start : 2;
-    uint8_t nec_receiving_repeat : 2;
+    uint16_t nec_low_tick_cnt;
+    uint16_t nec_high_tick_cnt;
+    uint8_t nec_receiving_bit_cnt;
+    uint8_t nec_receiving_start;
+    uint8_t nec_receiving_repeat;
 } nec_receiving_data_type;
 
 void nec_scan_100us(uint8_t level);

@@ -8,7 +8,7 @@ The NEC IR transmission protocol uses pulse distance encoding of the message bit
 
 ## Feature
 - Easy to use.
-- Not focused on any specific device, compatible with cheap 8-bit chips.
+- Not focused on any specific device, compatible with cheap chips.
 - Various configuration options and callback functions.
 - Repeat codes supported.
 
