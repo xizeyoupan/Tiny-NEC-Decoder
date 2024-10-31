@@ -67,4 +67,4 @@ void main(void)
 ```
 
 ## Hooks
-![](docs\static\nec_transmission_code.png)
+![](docs/static/nec_transmission_code.png)
